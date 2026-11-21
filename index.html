@@ -1,1018 +1,1106 @@
 <!DOCTYPE html>
 <html lang="fr" class="dark">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Warren — Ingénieur Logiciel, Automatisation & IA</title>
-  <meta name="description" content="Portfolio de Warren (Jean-Paul Ekbondu) — Ingénieur Logiciel, Développement Web, Automatisation de Workflows, Marketing Digital & IA." />
-  
-  <!-- Tailwind CSS CDN (Léger, idéal pour GitHub Pages) -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  
-  <!-- Google Fonts : Plus Jakarta Sans & JetBrains Mono -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-  
-  <!-- Lucide Icons -->
-  <script src="https://unpkg.com/lucide@latest"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Warren (Jean-Paul Ekbondu) — Ingénieur Logiciel & Automatisation</title>
+    <meta name="description" content="Portfolio de Warren (Jean-Paul Ekbondu) — Ingénieur Logiciel, Développement Web, Architecture de Systèmes d'Automatisation, Marketing Digital & IA.">
+    
+    <!-- Chargement de Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Police Google Fonts : Inter & Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Icônes Lucide -->
+    <script src="https://unpkg.com/lucide@latest"></script>
 
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          fontFamily: {
-            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
-            mono: ['"JetBrains Mono"', 'monospace'],
-          },
-          colors: {
-            void: '#05070B',
-            surface: '#0B0F17',
-            card: 'rgba(15, 21, 33, 0.72)',
-            cyanGlow: '#38BDF8',
-            goldGlow: '#F59E0B',
-          }
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Plus Jakarta Sans', 'sans-serif'],
+                    },
+                    colors: {
+                        obsidian: '#060911',
+                        cardDark: 'rgba(13, 19, 33, 0.72)',
+                        cyanAccent: '#38bdf8',
+                        goldAccent: '#f59e0b',
+                    }
+                }
+            }
         }
-      }
-    }
-  </script>
+    </script>
 
-  <style>
-    * {
-      box-sizing: border-box;
-    }
+    <style>
+        /* Styles généraux et fond sombre profond */
+        body {
+            background-color: #060911;
+            color: #f1f5f9;
+            overflow-x: hidden;
+            margin: 0;
+            padding: 0;
+        }
 
-    body {
-      background-color: #05070B;
-      color: #F1F5F9;
-      overflow-x: hidden;
-      margin: 0;
-    }
+        /* Canvas d'arrière-plan permanent (effet poussière 3D bleue et dorée) */
+        #dust-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
 
-    /* Canvas 3D Poussière Bleutée & Dorée */
-    #space-canvas {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      z-index: 0;
-      pointer-events: none;
-    }
+        /* Effet Glassmorphism premium */
+        .glass-panel {
+            background: rgba(13, 19, 33, 0.72);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 10px 35px -10px rgba(0, 0, 0, 0.65);
+            transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+        }
 
-    /* Vignette subtile pour garder une lisibilité parfaite */
-    .bg-vignette {
-      position: fixed;
-      inset: 0;
-      background: radial-gradient(circle at center, transparent 35%, rgba(5, 7, 11, 0.85) 100%);
-      z-index: 1;
-      pointer-events: none;
-    }
+        .glass-panel:hover {
+            border-color: rgba(56, 189, 248, 0.3);
+            box-shadow: 0 15px 40px -10px rgba(56, 189, 248, 0.12);
+        }
 
-    /* Conteneur principal au-dessus du canvas */
-    .app-layer {
-      position: relative;
-      z-index: 10;
-    }
+        /* Anneau lumineux autour de l'avatar circulaire sur l'accueil */
+        .avatar-ring {
+            position: relative;
+            background: linear-gradient(135deg, #38bdf8, #f59e0b);
+            padding: 3px;
+            box-shadow: 0 0 35px rgba(56, 189, 248, 0.35), 0 0 20px rgba(245, 158, 11, 0.25);
+        }
 
-    /* Glassmorphism & Cartes Bento */
-    .glass-card {
-      background: rgba(13, 18, 29, 0.72);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.3s ease, box-shadow 0.3s ease;
-    }
+        /* Transitions fluides entre les 4 pages (glissement horizontal + fondu) */
+        .page-section {
+            display: none;
+            opacity: 0;
+            transform: translateX(24px);
+            transition: opacity 0.45s cubic-bezier(0.22, 1, 0.36, 1), transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+        }
 
-    .glass-card:hover {
-      border-color: rgba(56, 189, 248, 0.35);
-      box-shadow: 0 12px 35px -10px rgba(0, 0, 0, 0.6), 0 0 20px rgba(56, 189, 248, 0.08);
-      transform: translateY(-2px);
-    }
+        .page-section.active {
+            display: block;
+        }
 
-    /* Transitions entre les 4 pages (Glissement fluide) */
-    .page-section {
-      display: none;
-      opacity: 0;
-      transform: translateX(28px);
-      transition: opacity 0.42s cubic-bezier(0.22, 1, 0.36, 1), transform 0.42s cubic-bezier(0.22, 1, 0.36, 1);
-    }
+        .page-section.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
 
-    .page-section.active {
-      display: block;
-    }
+        /* Dégradé de texte signature */
+        .text-gradient {
+            background: linear-gradient(90deg, #ffffff 0%, #7dd3fc 55%, #fbbf24 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
 
-    .page-section.visible {
-      opacity: 1;
-      transform: translateX(0);
-    }
+        /* Barre de défilement discrète */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #060911;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1e293b;
+            border-radius: 9999px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #38bdf8;
+        }
 
-    /* Halo de l'avatar circulaire sur l'accueil */
-    .avatar-ring {
-      position: relative;
-      box-shadow: 0 0 35px rgba(56, 189, 248, 0.25), inset 0 0 15px rgba(245, 158, 11, 0.2);
-    }
-    .avatar-ring::before {
-      content: '';
-      position: absolute;
-      inset: -3px;
-      border-radius: 9999px;
-      background: linear-gradient(135deg, #38BDF8, #F59E0B, #38BDF8);
-      z-index: -1;
-      animation: spinSlow 8s linear infinite;
-    }
-
-    @keyframes spinSlow {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-
-    /* Bouton principal lumineux */
-    .btn-primary {
-      background: linear-gradient(135deg, #0EA5E9 0%, #2563EB 100%);
-      box-shadow: 0 4px 20px rgba(14, 165, 233, 0.35);
-      transition: all 0.25s ease;
-    }
-    .btn-primary:hover {
-      box-shadow: 0 6px 28px rgba(14, 165, 233, 0.55);
-      transform: translateY(-1px);
-    }
-
-    /* Navigation active */
-    .nav-btn.active {
-      color: #38BDF8;
-      background: rgba(56, 189, 248, 0.12);
-      border-color: rgba(56, 189, 248, 0.3);
-    }
-
-    /* Styles d'impression pour exporter le CV en PDF propre */
-    @media print {
-      body {
-        background: #ffffff !important;
-        color: #0f172a !important;
-      }
-      #space-canvas, .bg-vignette, header, #main-app, #cv-modal-controls {
-        display: none !important;
-      }
-      #cv-modal {
-        position: static !important;
-        display: block !important;
-        background: #ffffff !important;
-        padding: 0 !important;
-      }
-      #cv-document {
-        box-shadow: none !important;
-        border: none !important;
-        background: #ffffff !important;
-        color: #0f172a !important;
-        max-width: 100% !important;
-        padding: 0 !important;
-      }
-      .print-dark-text {
-        color: #0f172a !important;
-      }
-      .print-muted-text {
-        color: #475569 !important;
-      }
-      .print-border {
-        border-color: #cbd5e1 !important;
-      }
-    }
-  </style>
+        /* Styles spécifiques pour l'impression du CV en PDF */
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            #cv-printable-area, #cv-printable-area * {
+                visibility: visible;
+            }
+            #cv-printable-area {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                background: #ffffff !important;
+                color: #0f172a !important;
+                padding: 20px !important;
+                box-shadow: none !important;
+            }
+            .no-print {
+                display: none !important;
+            }
+        }
+    </style>
 </head>
 <body class="antialiased selection:bg-sky-500/30 selection:text-sky-200">
 
-  <!-- Arrière-plan 3D Poussière Bleutée & Dorée -->
-  <canvas id="space-canvas"></canvas>
-  <div class="bg-vignette"></div>
+    <!-- Arrière-plan 3D Poussière Bleutée & Dorée (effet profondeur continu) -->
+    <canvas id="dust-canvas"></canvas>
 
-  <!-- Couche Applicative -->
-  <div id="main-app" class="app-layer min-h-screen flex flex-col justify-between">
-    
-    <!-- Barre de Navigation Supérieure -->
-    <header class="sticky top-0 z-40 border-b border-white/10 bg-[#05070B]/80 backdrop-blur-xl">
-      <div class="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
-        
-        <!-- Logo / Identité -->
-        <button onclick="navigateTo('accueil')" class="flex items-center gap-2.5 text-left group focus:outline-none">
-          <div class="w-9 h-9 rounded-lg bg-gradient-to-br from-sky-500/20 to-amber-500/20 border border-sky-400/40 flex items-center justify-center font-mono font-bold text-sky-400 group-hover:border-amber-400/60 transition-colors">
-            W.
-          </div>
-          <div>
-            <span class="font-bold tracking-tight text-white block leading-none">WARREN</span>
-            <span class="text-[11px] font-mono text-slate-400 tracking-wider uppercase">Software & Automation</span>
-          </div>
-        </button>
+    <!-- BARRE DE NAVIGATION SUPÉRIEURE FIXE -->
+    <header class="fixed top-0 left-0 right-0 z-40 px-4 sm:px-6 pt-4 no-print">
+        <nav class="max-w-6xl mx-auto glass-panel rounded-2xl px-4 sm:px-6 py-3 flex items-center justify-between">
+            <!-- Logo / Identité -->
+            <button onclick="navigateTo('accueil')" class="flex items-center gap-3 text-left group focus:outline-none">
+                <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-sky-400 to-amber-400 flex items-center justify-center text-slate-950 font-extrabold font-display text-lg shadow-md group-hover:scale-105 transition-transform">
+                    W
+                </div>
+                <div>
+                    <span class="font-display font-bold text-white tracking-tight text-base sm:text-lg block leading-none">Warren</span>
+                    <span class="text-[11px] text-sky-400 font-medium tracking-wider uppercase">Ingénieur Logiciel</span>
+                </div>
+            </button>
 
-        <!-- Menu Desktop (4 pages) -->
-        <nav class="hidden md:flex items-center gap-1.5 bg-white/[0.03] p-1 rounded-xl border border-white/10">
-          <button onclick="navigateTo('accueil')" data-nav="accueil" class="nav-btn active px-4 py-1.5 rounded-lg text-sm font-medium text-slate-300 border border-transparent hover:text-white transition-all">
-            Accueil
-          </button>
-          <button onclick="navigateTo('presentation')" data-nav="presentation" class="nav-btn px-4 py-1.5 rounded-lg text-sm font-medium text-slate-300 border border-transparent hover:text-white transition-all">
-            Présentation
-          </button>
-          <button onclick="navigateTo('creations')" data-nav="creations" class="nav-btn px-4 py-1.5 rounded-lg text-sm font-medium text-slate-300 border border-transparent hover:text-white transition-all">
-            Créations
-          </button>
-          <button onclick="navigateTo('contact')" data-nav="contact" class="nav-btn px-4 py-1.5 rounded-lg text-sm font-medium text-slate-300 border border-transparent hover:text-white transition-all">
-            Contact
-          </button>
+            <!-- Liens Desktop -->
+            <div class="hidden md:flex items-center gap-2 bg-slate-900/60 p-1.5 rounded-xl border border-white/5">
+                <button onclick="navigateTo('accueil')" data-nav="accueil" class="nav-btn px-4 py-2 rounded-lg text-sm font-medium transition-all text-white bg-sky-500/20 border border-sky-400/30">
+                    Accueil
+                </button>
+                <button onclick="navigateTo('presentation')" data-nav="presentation" class="nav-btn px-4 py-2 rounded-lg text-sm font-medium text-slate-300 hover:text-white transition-all">
+                    Présentation
+                </button>
+                <button onclick="navigateTo('creations')" data-nav="creations" class="nav-btn px-4 py-2 rounded-lg text-sm font-medium text-slate-300 hover:text-white transition-all">
+                    Créations
+                </button>
+                <button onclick="navigateTo('contact')" data-nav="contact" class="nav-btn px-4 py-2 rounded-lg text-sm font-medium text-slate-300 hover:text-white transition-all">
+                    Contact
+                </button>
+            </div>
+
+            <!-- Action rapide CV (Desktop) + Bouton Menu Mobile -->
+            <div class="flex items-center gap-2">
+                <button onclick="openCvModal()" class="hidden sm:inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold bg-amber-500/15 text-amber-300 border border-amber-400/30 hover:bg-amber-500/25 transition-all">
+                    <i data-lucide="file-text" class="w-4 h-4"></i>
+                    <span>Mon CV</span>
+                </button>
+
+                <!-- Bouton Burger Mobile -->
+                <button id="mobile-menu-btn" onclick="toggleMobileMenu()" aria-label="Menu" class="md:hidden p-2.5 rounded-xl bg-slate-800/80 text-slate-200 hover:text-white border border-white/10">
+                    <i data-lucide="menu" id="menu-icon" class="w-5 h-5"></i>
+                </button>
+            </div>
         </nav>
 
-        <!-- Bouton CV & Menu Mobile -->
-        <div class="flex items-center gap-2.5">
-          <button onclick="openCV()" class="flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-amber-500/15 text-amber-300 border border-amber-500/30 hover:bg-amber-500/25 transition-all">
-            <i data-lucide="file-text" class="w-4 h-4"></i>
-            <span>Mon CV</span>
-          </button>
-          
-          <button onclick="toggleMobileMenu()" class="md:hidden p-2 rounded-lg bg-white/5 border border-white/10 text-slate-300 hover:text-white" aria-label="Menu">
-            <i data-lucide="menu" class="w-5 h-5"></i>
-          </button>
+        <!-- Menu Déroulant Mobile -->
+        <div id="mobile-menu" class="hidden md:hidden max-w-6xl mx-auto mt-2 glass-panel rounded-2xl p-3 flex flex-col gap-1.5">
+            <button onclick="navigateTo('accueil'); toggleMobileMenu()" data-nav="accueil" class="nav-btn-mobile w-full text-left px-4 py-3 rounded-xl text-sm font-medium text-white bg-sky-500/20">
+                Accueil
+            </button>
+            <button onclick="navigateTo('presentation'); toggleMobileMenu()" data-nav="presentation" class="nav-btn-mobile w-full text-left px-4 py-3 rounded-xl text-sm font-medium text-slate-300 hover:bg-white/5">
+                Présentation
+            </button>
+            <button onclick="navigateTo('creations'); toggleMobileMenu()" data-nav="creations" class="nav-btn-mobile w-full text-left px-4 py-3 rounded-xl text-sm font-medium text-slate-300 hover:bg-white/5">
+                Créations
+            </button>
+            <button onclick="navigateTo('contact'); toggleMobileMenu()" data-nav="contact" class="nav-btn-mobile w-full text-left px-4 py-3 rounded-xl text-sm font-medium text-slate-300 hover:bg-white/5">
+                Contact
+            </button>
+            <button onclick="openCvModal(); toggleMobileMenu()" class="w-full text-left px-4 py-3 rounded-xl text-sm font-semibold text-amber-300 bg-amber-500/10 border border-amber-400/20 flex items-center gap-2 mt-1">
+                <i data-lucide="file-text" class="w-4 h-4"></i>
+                <span>Voir / Télécharger mon CV</span>
+            </button>
         </div>
-      </div>
-
-      <!-- Menu Mobile Déroulant -->
-      <div id="mobile-menu" class="hidden md:hidden border-t border-white/10 bg-[#080B12]/95 px-4 py-3 space-y-1.5">
-        <button onclick="navigateTo('accueil'); toggleMobileMenu()" data-nav-mobile="accueil" class="w-full text-left px-4 py-2.5 rounded-lg text-sm font-medium text-sky-400 bg-sky-500/10">Accueil</button>
-        <button onclick="navigateTo('presentation'); toggleMobileMenu()" data-nav-mobile="presentation" class="w-full text-left px-4 py-2.5 rounded-lg text-sm font-medium text-slate-300 hover:bg-white/5">Présentation</button>
-        <button onclick="navigateTo('creations'); toggleMobileMenu()" data-nav-mobile="creations" class="w-full text-left px-4 py-2.5 rounded-lg text-sm font-medium text-slate-300 hover:bg-white/5">Créations</button>
-        <button onclick="navigateTo('contact'); toggleMobileMenu()" data-nav-mobile="contact" class="w-full text-left px-4 py-2.5 rounded-lg text-sm font-medium text-slate-300 hover:bg-white/5">Contact</button>
-      </div>
     </header>
 
-    <!-- CONTENU PRINCIPAL DES 4 PAGES -->
-    <main class="flex-grow flex items-center justify-center px-4 sm:px-6 py-10 sm:py-14">
-      <div class="w-full max-w-6xl">
+    <!-- CONTENEUR PRINCIPAL DES 4 PAGES -->
+    <main class="relative z-10 min-h-screen pt-28 pb-16 px-4 sm:px-6 max-w-6xl mx-auto flex flex-col justify-center">
 
         <!-- ========================================== -->
         <!-- PAGE 1 : ACCUEIL                           -->
         <!-- ========================================== -->
         <section id="page-accueil" class="page-section active visible">
-          <div class="max-w-3xl mx-auto text-center space-y-7">
-            
-            <!-- Badge de disponibilité -->
-            <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/[0.04] border border-white/10 text-xs font-mono text-slate-300">
-              <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-              <span>Disponible pour projets Web, Automatisation & IA</span>
-            </div>
-
-            <!-- Photo de profil en CERCLE au centre (comme demandé) -->
-            <div class="flex justify-center">
-              <div class="avatar-ring w-32 h-32 sm:w-36 sm:h-36 rounded-full bg-[#0D1320] p-1 flex items-center justify-center overflow-hidden">
-                <!-- REMPLACE 'avatar-warren.jpg' PAR TA PHOTO DE VISAGE QUAND ELLE SERA PRÊTE -->
-                <img 
-                  src="avatar-warren.jpg" 
-                  alt="Warren — Ingénieur Logiciel" 
-                  class="w-full h-full object-cover rounded-full"
-                  onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
-                />
-                <!-- Espace réservé élégant affiché tant que l'image n'est pas encore ajoutée -->
-                <div class="hidden w-full h-full rounded-full bg-gradient-to-b from-slate-800 to-slate-950 flex-col items-center justify-center text-slate-400 p-2">
-                  <i data-lucide="user" class="w-10 h-10 text-sky-400 mb-1"></i>
-                  <span class="text-[10px] font-mono uppercase tracking-wider text-slate-400">Photo Profil</span>
+            <div class="flex flex-col items-center text-center max-w-3xl mx-auto py-6 sm:py-12">
+                
+                <!-- Badge Statut -->
+                <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass-panel text-xs font-medium text-sky-300 mb-8 border border-sky-400/20">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                    <span>Disponible pour projets web, automatisation & collaborations</span>
                 </div>
-              </div>
+
+                <!-- PHOTO DE PROFIL EN CERCLE (CENTRE DE L'ACCUEIL) -->
+                <!-- NOTE POUR WARREN : Remplace la balise <div ...> interne par <img src="ta-photo.jpg" alt="Warren" class="w-full h-full object-cover rounded-full"> dès que tu as ta photo -->
+                <div class="avatar-ring w-32 h-32 sm:w-40 sm:h-40 rounded-full mb-8 group cursor-pointer" onclick="navigateTo('presentation')" title="Découvrir mon parcours">
+                    <div class="w-full h-full rounded-full bg-slate-900 flex flex-col items-center justify-center overflow-hidden relative">
+                        <img src="avatar-warren.jpg" alt="Warren - Ingénieur Logiciel" 
+                             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+                             class="w-full h-full object-cover">
+                        <!-- Placeholder élégant affiché tant que avatar-warren.jpg n'est pas ajouté -->
+                        <div class="flex flex-col items-center justify-center text-center p-2">
+                            <i data-lucide="user" class="w-12 h-12 text-sky-400/80 mb-1 group-hover:scale-110 transition-transform"></i>
+                            <span class="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">Votre photo ici</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Titre Principal -->
+                <h1 class="font-display font-extrabold text-3xl sm:text-5xl md:text-6xl tracking-tight leading-tight mb-5">
+                    <span class="text-white block">Warren</span>
+                    <span class="text-gradient">Ingénieur Logiciel</span>
+                </h1>
+
+                <!-- Sous-titre / Expertises clés -->
+                <p class="text-sm sm:text-lg font-semibold text-sky-300/95 tracking-wide mb-5 max-w-2xl">
+                    Développement Web <span class="text-amber-400 mx-1.5">•</span> Architecture de Systèmes d'Automatisation & Intégration API <span class="text-amber-400 mx-1.5">•</span> Marketing Digital & IA
+                </p>
+
+                <!-- Phrase d'accroche humaine et inspirante -->
+                <p class="text-slate-300 text-base sm:text-lg leading-relaxed max-w-2xl mb-10 font-normal">
+                    Je transforme des idées ambitieuses en systèmes numériques autonomes, fiables et élégants. De la conception d'interfaces modernes à l'orchestration de flux automatisés intelligents, j'aide les projets à gagner en vitesse, en clarté et en impact.
+                </p>
+
+                <!-- Boutons d'Action -->
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-4 w-full sm:w-auto">
+                    <button onclick="navigateTo('creations')" class="w-full sm:w-auto px-8 py-4 rounded-2xl font-semibold text-slate-950 bg-gradient-to-r from-sky-400 via-sky-300 to-amber-300 hover:brightness-110 shadow-lg shadow-sky-500/20 transition-all flex items-center justify-center gap-2.5">
+                        <span>Découvrir mes créations</span>
+                        <i data-lucide="arrow-right" class="w-5 h-5"></i>
+                    </button>
+                    <button onclick="navigateTo('contact')" class="w-full sm:w-auto px-8 py-4 rounded-2xl font-semibold text-white glass-panel hover:bg-white/10 transition-all flex items-center justify-center gap-2.5">
+                        <i data-lucide="send" class="w-4 h-4 text-amber-400"></i>
+                        <span>Me contacter</span>
+                    </button>
+                </div>
+
+                <!-- Indicateurs rapides en bas de l'accueil -->
+                <div class="grid grid-cols-3 gap-4 sm:gap-8 mt-14 pt-8 border-t border-white/10 w-full max-w-xl">
+                    <div>
+                        <div class="font-display font-bold text-xl sm:text-2xl text-white">Web & PWA</div>
+                        <div class="text-xs text-slate-400 mt-0.5">Interfaces sur mesure</div>
+                    </div>
+                    <div>
+                        <div class="font-display font-bold text-xl sm:text-2xl text-sky-400">Workflows</div>
+                        <div class="text-xs text-slate-400 mt-0.5">Automatisation & API</div>
+                    </div>
+                    <div>
+                        <div class="font-display font-bold text-xl sm:text-2xl text-amber-400">Growth & IA</div>
+                        <div class="text-xs text-slate-400 mt-0.5">Marketing Digital</div>
+                    </div>
+                </div>
             </div>
-
-            <!-- Titre Principal & Spécialités -->
-            <div class="space-y-4">
-              <h1 class="text-3xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-white leading-[1.15]">
-                Ingénieur Logiciel
-              </h1>
-              <p class="text-base sm:text-xl font-semibold bg-gradient-to-r from-sky-400 via-slate-200 to-amber-400 bg-clip-text text-transparent">
-                Développement Web • Systèmes d'Automatisation & Intégration • Marketing Digital & IA
-              </p>
-            </div>
-
-            <!-- Accroche humaine & percutante -->
-            <p class="text-sm sm:text-base text-slate-300/90 max-w-2xl mx-auto leading-relaxed">
-              Je conçois des architectures web modernes et des écosystèmes interconnectés où chaque action déclenche la suivante sans friction — du paiement client jusqu'au traitement automatisé des données. Alliant rigueur logicielle, stratégie digitale et intelligence artificielle, je transforme des processus complexes en systèmes fluides, autonomes et durables.
-            </p>
-
-            <!-- Boutons d'Action -->
-            <div class="flex flex-col sm:flex-row items-center justify-center gap-3.5 pt-2">
-              <button onclick="navigateTo('creations')" class="btn-primary w-full sm:w-auto px-7 py-3.5 rounded-xl font-semibold text-white text-sm flex items-center justify-center gap-2">
-                <span>Explorer mes créations</span>
-                <i data-lucide="arrow-right" class="w-4 h-4"></i>
-              </button>
-              <button onclick="navigateTo('presentation')" class="w-full sm:w-auto px-7 py-3.5 rounded-xl font-semibold text-slate-200 text-sm bg-white/[0.05] border border-white/10 hover:bg-white/[0.1] transition-all flex items-center justify-center gap-2">
-                <span>Découvrir mon parcours</span>
-              </button>
-              <button onclick="openCV()" class="w-full sm:w-auto px-6 py-3.5 rounded-xl font-semibold text-amber-300 text-sm bg-amber-500/10 border border-amber-500/25 hover:bg-amber-500/20 transition-all flex items-center justify-center gap-2">
-                <i data-lucide="download" class="w-4 h-4"></i>
-                <span>CV</span>
-              </button>
-            </div>
-
-            <!-- Indicateurs clés -->
-            <div class="grid grid-cols-3 gap-3 max-w-lg mx-auto pt-6 border-t border-white/10 text-center">
-              <div>
-                <div class="text-lg sm:text-xl font-bold text-white font-mono">Full-Stack</div>
-                <div class="text-xs text-slate-400">Architecture Web</div>
-              </div>
-              <div>
-                <div class="text-lg sm:text-xl font-bold text-sky-400 font-mono">Workflows</div>
-                <div class="text-xs text-slate-400">Automatisation API</div>
-              </div>
-              <div>
-                <div class="text-lg sm:text-xl font-bold text-amber-400 font-mono">IA & Growth</div>
-                <div class="text-xs text-slate-400">Marketing Digital</div>
-              </div>
-            </div>
-
-          </div>
         </section>
 
         <!-- ========================================== -->
-        <!-- PAGE 2 : PRÉSENTATION (Photos normales)    -->
+        <!-- PAGE 2 : PRÉSENTATION (BENTO GRID)         -->
         <!-- ========================================== -->
         <section id="page-presentation" class="page-section">
-          <div class="space-y-8">
-            
-            <!-- En-tête de section -->
-            <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-white/10 pb-5">
-              <div>
-                <span class="text-xs font-mono uppercase tracking-widest text-sky-400">À propos de moi</span>
-                <h2 class="text-2xl sm:text-4xl font-bold text-white mt-1">Présentation & Vision</h2>
-              </div>
-              <button onclick="openCV()" class="self-start sm:self-auto inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold bg-amber-500/15 text-amber-300 border border-amber-500/30 hover:bg-amber-500/25 transition-all">
-                <i data-lucide="file-down" class="w-4 h-4"></i>
-                <span>Télécharger / Voir mon CV</span>
-              </button>
+            <div class="mb-8 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+                <div>
+                    <span class="text-xs font-bold uppercase tracking-widest text-amber-400">À propos de moi</span>
+                    <h2 class="font-display font-extrabold text-3xl sm:text-4xl text-white mt-1">Présentation & Vision</h2>
+                </div>
+                <button onclick="openCvModal()" class="inline-flex items-center justify-center gap-2.5 px-5 py-3 rounded-xl font-semibold text-sm bg-gradient-to-r from-amber-500 to-amber-400 text-slate-950 hover:brightness-110 shadow-lg shadow-amber-500/20 transition-all">
+                    <i data-lucide="download" class="w-4 h-4"></i>
+                    <span>Télécharger mon CV (PDF)</span>
+                </button>
             </div>
 
-            <!-- Grille Bento Principale -->
+            <!-- Bento Grid Principale -->
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-              
-              <!-- Colonne Gauche : Photo Principale Rectangulaire + Identité -->
-              <div class="lg:col-span-5 glass-card rounded-2xl p-5 flex flex-col justify-between space-y-5">
-                <!-- Photo Principale en FORMAT NORMAL (Rectangulaire aux coins doux) -->
-                <div class="relative w-full aspect-[4/3] rounded-xl overflow-hidden bg-slate-900 border border-white/10">
-                  <!-- REMPLACE 'photo-principale.jpg' PAR TON PORTRAIT EN PIED OU BUSTE -->
-                  <img 
-                    src="photo-principale.jpg" 
-                    alt="Warren — Portrait" 
-                    class="w-full h-full object-cover"
-                    onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
-                  />
-                  <div class="hidden w-full h-full flex-col items-center justify-center text-slate-400 p-6 text-center bg-gradient-to-br from-slate-900 to-[#080C14]">
-                    <div class="w-12 h-12 rounded-xl bg-sky-500/10 border border-sky-500/20 flex items-center justify-center mb-3">
-                      <i data-lucide="camera" class="w-6 h-6 text-sky-400"></i>
-                    </div>
-                    <p class="text-sm font-medium text-slate-200">Emplacement Photo Principale</p>
-                    <p class="text-xs text-slate-500 mt-1 font-mono">Format rectangulaire • photo-principale.jpg</p>
-                  </div>
-                </div>
-
-                <div class="space-y-2">
-                  <div class="flex items-center justify-between">
-                    <h3 class="text-lg font-bold text-white">Jean-Paul Ekbondu (Warren)</h3>
-                    <span class="text-xs font-mono px-2.5 py-1 rounded-md bg-sky-500/10 text-sky-400 border border-sky-500/20">Kinshasa, RDC</span>
-                  </div>
-                  <p class="text-xs sm:text-sm text-slate-400 leading-relaxed">
-                    Étudiant en Sciences Informatiques (ISIPA) & Ingénieur Logiciel indépendant. Animé par la discipline, la curiosité intellectuelle et le goût du travail bien structuré.
-                  </p>
-                </div>
-              </div>
-
-              <!-- Colonne Droite : Histoire, Philosophie & Expertises -->
-              <div class="lg:col-span-7 space-y-6">
                 
-                <!-- Mon Histoire & Approche -->
-                <div class="glass-card rounded-2xl p-6 space-y-4">
-                  <div class="flex items-center gap-2.5 text-sky-400 font-mono text-xs uppercase tracking-wider">
-                    <i data-lucide="cpu" class="w-4 h-4"></i>
-                    <span>Mon Parcours & Ma Philosophie</span>
-                  </div>
-                  <p class="text-sm sm:text-base text-slate-300 leading-relaxed">
-                    Pour moi, la technologie n'a de valeur que lorsqu'elle libère du temps et résout des problèmes concrets avec élégance. Mon approche repose sur une idée simple : <strong class="text-white">connecter l'intelligence humaine à la puissance des systèmes automatisés</strong>.
-                  </p>
-                  <p class="text-sm sm:text-base text-slate-300 leading-relaxed">
-                    Que ce soit pour bâtir une application web rapide, orchestrer des <strong class="text-sky-300">workflows automatisés de bout en bout</strong> (où un paiement déclenche instantanément la vérification, la facturation et l'accès client sans intervention manuelle), ou déployer des stratégies de <strong class="text-amber-300">marketing digital propulsées par l'IA</strong>, je conçois chaque projet avec rigueur et vision long terme.
-                  </p>
+                <!-- Colonne Gauche : Photo Principale RECTANGULAIRE + Carte Identité -->
+                <div class="lg:col-span-4 flex flex-col gap-6">
+                    <div class="glass-panel rounded-2xl p-4">
+                        <!-- ESPACE PHOTO PRINCIPALE RECTANGULAIRE (PAS EN CERCLE) -->
+                        <div class="aspect-[4/5] w-full rounded-xl bg-slate-900/90 border border-dashed border-sky-400/35 overflow-hidden relative flex flex-col items-center justify-center group">
+                            <img src="photo-principale.jpg" alt="Warren — Portrait professionnel" 
+                                 onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+                                 class="w-full h-full object-cover">
+                            <div class="flex flex-col items-center justify-center text-center p-6">
+                                <div class="w-14 h-14 rounded-xl bg-sky-500/10 border border-sky-400/25 flex items-center justify-center mb-3">
+                                    <i data-lucide="camera" class="w-7 h-7 text-sky-400"></i>
+                                </div>
+                                <p class="text-sm font-semibold text-slate-200">Portrait Principal</p>
+                                <p class="text-xs text-slate-400 mt-1">Format rectangulaire • Placez <code class="text-sky-300">photo-principale.jpg</code> dans votre dossier GitHub</p>
+                            </div>
+                        </div>
+                        <div class="mt-4 px-1 flex items-center justify-between">
+                            <div>
+                                <h3 class="font-display font-bold text-white text-lg">Jean-Paul Ekbondu (Warren)</h3>
+                                <p class="text-xs text-slate-400">Kinshasa, RD Congo • Ingénieur Logiciel</p>
+                            </div>
+                            <span class="px-2.5 py-1 rounded-lg bg-sky-500/15 text-sky-300 text-xs font-semibold border border-sky-400/20">L2 Info • ISIPA</span>
+                        </div>
+                    </div>
+
+                    <!-- Carte Philosophie & Valeurs -->
+                    <div class="glass-panel rounded-2xl p-6">
+                        <div class="flex items-center gap-2.5 text-amber-400 mb-3">
+                            <i data-lucide="compass" class="w-5 h-5"></i>
+                            <h3 class="font-display font-bold text-white text-base">Ma Philosophie</h3>
+                        </div>
+                        <p class="text-sm text-slate-300 leading-relaxed">
+                            « La vraie technologie ne cherche pas à impressionner par sa complexité : elle libère du temps, sécurise les processus et crée de la valeur concrète chaque jour. »
+                        </p>
+                    </div>
                 </div>
 
-                <!-- 3 Piliers de Compétences -->
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                  <div class="glass-card rounded-xl p-4 space-y-2">
-                    <div class="w-8 h-8 rounded-lg bg-sky-500/15 text-sky-400 flex items-center justify-center">
-                      <i data-lucide="code-2" class="w-4 h-4"></i>
+                <!-- Colonne Droite : Histoire humaine + Expertise Automatisation + Galerie 3 Photos Rectangulaires -->
+                <div class="lg:col-span-8 flex flex-col gap-6">
+                    
+                    <!-- Carte Mon Parcours & Histoire -->
+                    <div class="glass-panel rounded-2xl p-6 sm:p-8">
+                        <div class="flex items-center gap-2.5 text-sky-400 mb-4">
+                            <i data-lucide="sparkles" class="w-5 h-5"></i>
+                            <h3 class="font-display font-bold text-white text-xl">Construire des ponts entre l'idée et l'exécution</h3>
+                        </div>
+                        <div class="space-y-4 text-slate-300 text-sm sm:text-base leading-relaxed">
+                            <p>
+                                Passionné par l'informatique et la création numérique depuis Kinshasa, je poursuis actuellement mon cursus en <strong class="text-white">Sciences Informatiques à l'ISIPA</strong> avec une conviction profonde : l'excellence technique et la discipline quotidienne permettent de bâtir, depuis l'Afrique, des solutions capables de rivaliser à l'échelle mondiale.
+                            </p>
+                            <p>
+                                Mon approche combine trois piliers complémentaires : le <strong class="text-sky-300">Développement Web</strong> pour offrir des interfaces rapides et mémorables, l'<strong class="text-amber-300">Architecture de Systèmes d'Automatisation</strong> pour éliminer les tâches répétitives, et le <strong class="text-sky-300">Marketing Digital assisté par l'IA</strong> pour transformer chaque outil en levier de croissance.
+                            </p>
+                            <div class="p-4 rounded-xl bg-slate-900/80 border-l-4 border-sky-400 text-sm text-slate-200">
+                                <strong class="text-white block mb-1">Ce que j'entends par « Systèmes d'Automatisation Structurés » :</strong>
+                                Imaginez un client qui effectue un paiement d'un côté, et instantanément — sans aucune intervention humaine — son accès est validé, son reçu ou son QR code est généré, prêt à être scanné de l'autre côté. C'est cette orchestration intelligente via <span class="text-sky-300 font-medium">APIs, Webhooks et pipelines connectés</span> que je conçois.
+                            </div>
+                        </div>
                     </div>
-                    <h4 class="font-bold text-white text-sm">Ingénierie Web</h4>
-                    <p class="text-xs text-slate-400 leading-relaxed">HTML5, CSS3, JavaScript, PWAs, interfaces modernes, rapides et pensées pour la sécurité.</p>
-                  </div>
 
-                  <div class="glass-card rounded-xl p-4 space-y-2">
-                    <div class="w-8 h-8 rounded-lg bg-amber-500/15 text-amber-400 flex items-center justify-center">
-                      <i data-lucide="workflow" class="w-4 h-4"></i>
+                    <!-- Carte Stack Technique & Domaines -->
+                    <div class="glass-panel rounded-2xl p-6">
+                        <h3 class="font-display font-bold text-white text-lg mb-4 flex items-center gap-2">
+                            <i data-lucide="cpu" class="w-5 h-5 text-amber-400"></i>
+                            <span>Stack Technique & Compétences Clés</span>
+                        </h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div class="p-4 rounded-xl bg-slate-900/60 border border-white/5">
+                                <div class="text-xs font-bold uppercase tracking-wider text-sky-400 mb-1.5">Développement Web & PWA</div>
+                                <p class="text-sm text-slate-300">HTML5, CSS3, Tailwind, JavaScript moderne, applications web responsives et installables (PWA).</p>
+                            </div>
+                            <div class="p-4 rounded-xl bg-slate-900/60 border border-white/5">
+                                <div class="text-xs font-bold uppercase tracking-wider text-amber-400 mb-1.5">Automatisation & Workflows</div>
+                                <p class="text-sm text-slate-300">Architecture événementielle, Webhooks, intégration d'APIs, scénarios Make / n8n / Zapier.</p>
+                            </div>
+                            <div class="p-4 rounded-xl bg-slate-900/60 border border-white/5">
+                                <div class="text-xs font-bold uppercase tracking-wider text-sky-400 mb-1.5">Marketing Digital & IA</div>
+                                <p class="text-sm text-slate-300">Stratégie d'acquisition, tunnels de conversion, intégration d'agents IA et génération de contenu.</p>
+                            </div>
+                            <div class="p-4 rounded-xl bg-slate-900/60 border border-white/5">
+                                <div class="text-xs font-bold uppercase tracking-wider text-amber-400 mb-1.5">Rigueur & Sécurité</div>
+                                <p class="text-sm text-slate-300">Bonnes pratiques de sécurité applicative, gestion propre des données, Git & déploiement continu.</p>
+                            </div>
+                        </div>
                     </div>
-                    <h4 class="font-bold text-white text-sm">Automatisation</h4>
-                    <p class="text-xs text-slate-400 leading-relaxed">Intégration API, webhooks, paiements automatisés, synchronisation de données et pipelines sans friction.</p>
-                  </div>
 
-                  <div class="glass-card rounded-xl p-4 space-y-2">
-                    <div class="w-8 h-8 rounded-lg bg-emerald-500/15 text-emerald-400 flex items-center justify-center">
-                      <i data-lucide="sparkles" class="w-4 h-4"></i>
+                    <!-- GALERIE DE 3 PHOTOS RECTANGULAIRES ("EN ACTION / LIFESTYLE") -->
+                    <div class="glass-panel rounded-2xl p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="font-display font-bold text-white text-base flex items-center gap-2">
+                                <i data-lucide="image" class="w-5 h-5 text-sky-400"></i>
+                                <span>En action & Au quotidien</span>
+                            </h3>
+                            <span class="text-xs text-slate-400">Espaces prêts pour vos photos</span>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                            <!-- Photo Action 1 -->
+                            <div class="aspect-video sm:aspect-[4/3] rounded-xl bg-slate-900/90 border border-dashed border-white/15 overflow-hidden relative flex flex-col items-center justify-center p-3 text-center">
+                                <img src="action-1.jpg" alt="Warren en développement" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="w-full h-full object-cover">
+                                <div class="flex flex-col items-center justify-center">
+                                    <i data-lucide="code-2" class="w-6 h-6 text-sky-400/70 mb-1.5"></i>
+                                    <span class="text-xs font-medium text-slate-300">Photo Action 1</span>
+                                    <span class="text-[10px] text-slate-500">Code & Architecture</span>
+                                </div>
+                            </div>
+                            <!-- Photo Action 2 -->
+                            <div class="aspect-video sm:aspect-[4/3] rounded-xl bg-slate-900/90 border border-dashed border-white/15 overflow-hidden relative flex flex-col items-center justify-center p-3 text-center">
+                                <img src="action-2.jpg" alt="Warren en conférence ou travail" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="w-full h-full object-cover">
+                                <div class="flex flex-col items-center justify-center">
+                                    <i data-lucide="workflow" class="w-6 h-6 text-amber-400/70 mb-1.5"></i>
+                                    <span class="text-xs font-medium text-slate-300">Photo Action 2</span>
+                                    <span class="text-[10px] text-slate-500">Stratégie & Systèmes</span>
+                                </div>
+                            </div>
+                            <!-- Photo Action 3 -->
+                            <div class="aspect-video sm:aspect-[4/3] rounded-xl bg-slate-900/90 border border-dashed border-white/15 overflow-hidden relative flex flex-col items-center justify-center p-3 text-center">
+                                <img src="action-3.jpg" alt="Warren focus" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="w-full h-full object-cover">
+                                <div class="flex flex-col items-center justify-center">
+                                    <i data-lucide="zap" class="w-6 h-6 text-sky-400/70 mb-1.5"></i>
+                                    <span class="text-xs font-medium text-slate-300">Photo Action 3</span>
+                                    <span class="text-[10px] text-slate-500">Focus & Terrain</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <h4 class="font-bold text-white text-sm">Marketing & IA</h4>
-                    <p class="text-xs text-slate-400 leading-relaxed">Acquisition digitale, tunnels de conversion, agents IA et optimisation de la visibilité en ligne.</p>
-                  </div>
+
                 </div>
-
-              </div>
             </div>
-
-            <!-- Galerie de 3 Photos en Action (Format Rectangulaire Normal) -->
-            <div class="space-y-3 pt-2">
-              <div class="flex items-center justify-between">
-                <h3 class="text-sm font-mono uppercase tracking-wider text-slate-300">En action • Travail, Code & Stratégie</h3>
-                <span class="text-xs text-slate-500">Espaces prêts pour tes futures photos</span>
-              </div>
-              
-              <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <!-- Photo Action 1 -->
-                <div class="glass-card rounded-xl p-2.5">
-                  <div class="aspect-video w-full rounded-lg overflow-hidden bg-slate-900 border border-white/5">
-                    <img src="action-1.jpg" alt="Développement & Code" class="w-full h-full object-cover" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
-                    <div class="hidden w-full h-full flex-col items-center justify-center text-slate-500 text-xs font-mono p-4 text-center">
-                      <i data-lucide="laptop" class="w-5 h-5 text-sky-400/70 mb-1.5"></i>
-                      <span>Photo Action 1 (Code / Setup)</span>
-                      <span class="text-[10px] text-slate-600 mt-0.5">action-1.jpg</span>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- Photo Action 2 -->
-                <div class="glass-card rounded-xl p-2.5">
-                  <div class="aspect-video w-full rounded-lg overflow-hidden bg-slate-900 border border-white/5">
-                    <img src="action-2.jpg" alt="Architecture & Réflexion" class="w-full h-full object-cover" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
-                    <div class="hidden w-full h-full flex-col items-center justify-center text-slate-500 text-xs font-mono p-4 text-center">
-                      <i data-lucide="layers" class="w-5 h-5 text-amber-400/70 mb-1.5"></i>
-                      <span>Photo Action 2 (Stratégie)</span>
-                      <span class="text-[10px] text-slate-600 mt-0.5">action-2.jpg</span>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- Photo Action 3 -->
-                <div class="glass-card rounded-xl p-2.5">
-                  <div class="aspect-video w-full rounded-lg overflow-hidden bg-slate-900 border border-white/5">
-                    <img src="action-3.jpg" alt="Collaboration & Projets" class="w-full h-full object-cover" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
-                    <div class="hidden w-full h-full flex-col items-center justify-center text-slate-500 text-xs font-mono p-4 text-center">
-                      <i data-lucide="terminal" class="w-5 h-5 text-emerald-400/70 mb-1.5"></i>
-                      <span>Photo Action 3 (Terrain / Projet)</span>
-                      <span class="text-[10px] text-slate-600 mt-0.5">action-3.jpg</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-          </div>
         </section>
 
         <!-- ========================================== -->
-        <!-- PAGE 3 : CRÉATIONS                         -->
+        <!-- PAGE 3 : CRÉATIONS & RÉALISATIONS          -->
         <!-- ========================================== -->
         <section id="page-creations" class="page-section">
-          <div class="space-y-8">
-            
-            <div class="border-b border-white/10 pb-5">
-              <span class="text-xs font-mono uppercase tracking-widest text-amber-400">Réalisations & Laboratoire</span>
-              <h2 class="text-2xl sm:text-4xl font-bold text-white mt-1">Mes Créations</h2>
-              <p class="text-sm text-slate-400 mt-2 max-w-2xl">
-                Applications déployées, architectures d'automatisation et systèmes intelligents en cours d'élaboration.
-              </p>
+            <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
+                <div>
+                    <span class="text-xs font-bold uppercase tracking-widest text-sky-400">Portfolio & Laboratoire</span>
+                    <h2 class="font-display font-extrabold text-3xl sm:text-4xl text-white mt-1">Mes Créations</h2>
+                    <p class="text-slate-400 text-sm mt-1">Applications web, architectures d'automatisation et prototypes en cours de construction.</p>
+                </div>
+
+                <!-- Filtres Interactifs -->
+                <div class="flex flex-wrap gap-2">
+                    <button onclick="filterProjects('all')" data-filter="all" class="filter-btn px-4 py-2 rounded-xl text-xs font-semibold bg-sky-500 text-slate-950 transition-all">
+                        Tout voir
+                    </button>
+                    <button onclick="filterProjects('web')" data-filter="web" class="filter-btn px-4 py-2 rounded-xl text-xs font-semibold glass-panel text-slate-300 hover:text-white transition-all">
+                        Web & PWA
+                    </button>
+                    <button onclick="filterProjects('auto')" data-filter="auto" class="filter-btn px-4 py-2 rounded-xl text-xs font-semibold glass-panel text-slate-300 hover:text-white transition-all">
+                        Automatisation & IA
+                    </button>
+                    <button onclick="filterProjects('wip')" data-filter="wip" class="filter-btn px-4 py-2 rounded-xl text-xs font-semibold glass-panel text-slate-300 hover:text-white transition-all">
+                        En cours
+                    </button>
+                </div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-              
-              <!-- Projet 1 : PWA Plan Formation (Réel) -->
-              <div class="glass-card rounded-2xl p-6 flex flex-col justify-between space-y-5">
-                <div class="space-y-3">
-                  <div class="flex items-center justify-between">
-                    <span class="px-2.5 py-1 rounded-md text-xs font-mono bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">
-                      ● En Ligne (PWA)
-                    </span>
-                    <span class="text-xs font-mono text-slate-400">Web App • JavaScript</span>
-                  </div>
-                  <h3 class="text-xl font-bold text-white">Tableau de Bord & Suivi de Progression</h3>
-                  <p class="text-sm text-slate-300 leading-relaxed">
-                    Application Web Progressive (PWA) installable sur mobile et PC permettant de piloter ses objectifs d'apprentissage, suivre sa progression en temps réel et structurer sa discipline quotidienne.
-                  </p>
-                </div>
-                <div class="pt-4 border-t border-white/10 flex items-center justify-between">
-                  <div class="flex gap-2 text-xs font-mono text-slate-400">
-                    <span>#HTML5</span>
-                    <span>#PWA</span>
-                    <span>#LocalStorage</span>
-                  </div>
-                  <a href="https://warren-ops624.github.io/plan_formation/" target="_blank" rel="noopener" class="inline-flex items-center gap-1.5 text-sm font-semibold text-sky-400 hover:text-sky-300">
-                    <span>Visiter</span>
-                    <i data-lucide="external-link" class="w-4 h-4"></i>
-                  </a>
-                </div>
-              </div>
+            <!-- Grille des Projets -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="projects-grid">
 
-              <!-- Projet 2 : Architecture Automatisation (Démonstrateur) -->
-              <div class="glass-card rounded-2xl p-6 flex flex-col justify-between space-y-5">
-                <div class="space-y-3">
-                  <div class="flex items-center justify-between">
-                    <span class="px-2.5 py-1 rounded-md text-xs font-mono bg-sky-500/15 text-sky-300 border border-sky-500/30">
-                      ● Système Structuré
-                    </span>
-                    <span class="text-xs font-mono text-slate-400">Automatisation • Webhooks</span>
-                  </div>
-                  <h3 class="text-xl font-bold text-white">Pipeline Paiement → Validation & Accès Auto</h3>
-                  <p class="text-sm text-slate-300 leading-relaxed">
-                    Architecture d'automatisation connectant les passerelles de paiement aux outils de gestion : dès qu'un paiement est effectué, la vérification, le reçu, la mise à jour CRM et la notification client s'exécutent automatiquement.
-                  </p>
-                </div>
-                <div class="pt-4 border-t border-white/10 flex items-center justify-between">
-                  <div class="flex gap-2 text-xs font-mono text-slate-400">
-                    <span>#API</span>
-                    <span>#Webhooks</span>
-                    <span>#Automation</span>
-                  </div>
-                  <button onclick="navigateTo('contact')" class="inline-flex items-center gap-1.5 text-sm font-semibold text-amber-400 hover:text-amber-300">
-                    <span>Demander une démo</span>
-                    <i data-lucide="arrow-right" class="w-4 h-4"></i>
-                  </button>
-                </div>
-              </div>
+                <!-- Projet 1 : Portfolio V2 -->
+                <article data-category="web" class="project-card glass-panel rounded-2xl overflow-hidden flex flex-col justify-between group">
+                    <div>
+                        <div class="h-44 bg-gradient-to-br from-slate-900 via-sky-950/60 to-slate-900 p-6 flex flex-col justify-between relative overflow-hidden border-b border-white/5">
+                            <div class="flex items-center justify-between relative z-10">
+                                <span class="px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 flex items-center gap-1.5">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> Live
+                                </span>
+                                <span class="text-xs font-mono text-slate-400">HTML5 • Canvas 3D • Tailwind</span>
+                            </div>
+                            <div class="relative z-10">
+                                <div class="w-12 h-12 rounded-xl bg-sky-400/15 border border-sky-400/30 flex items-center justify-center text-sky-300 mb-2">
+                                    <i data-lucide="layout-template" class="w-6 h-6"></i>
+                                </div>
+                            </div>
+                            <div class="absolute -right-6 -bottom-6 w-32 h-32 rounded-full bg-sky-500/10 blur-2xl group-hover:bg-sky-400/20 transition-all"></div>
+                        </div>
 
-              <!-- Projet 3 : Coach d'Échecs IA (Prototype) -->
-              <div class="glass-card rounded-2xl p-6 flex flex-col justify-between space-y-5">
-                <div class="space-y-3">
-                  <div class="flex items-center justify-between">
-                    <span class="px-2.5 py-1 rounded-md text-xs font-mono bg-amber-500/15 text-amber-300 border border-amber-500/30">
-                      ◌ En Développement
-                    </span>
-                    <span class="text-xs font-mono text-slate-400">IA • API Chess.com</span>
-                  </div>
-                  <h3 class="text-xl font-bold text-white">Analyste Tactique & Coach IA Automatisé</h3>
-                  <p class="text-sm text-slate-300 leading-relaxed">
-                    Outil intelligent qui récupère automatiquement l'historique des parties via API, détecte les erreurs récurrentes par phase de jeu et génère des recommandations personnalisées grâce à l'IA.
-                  </p>
-                </div>
-                <div class="pt-4 border-t border-white/10 flex items-center justify-between">
-                  <div class="flex gap-2 text-xs font-mono text-slate-400">
-                    <span>#REST-API</span>
-                    <span>#LLM</span>
-                    <span>#Analytics</span>
-                  </div>
-                  <span class="text-xs font-mono text-slate-500">Bientôt disponible</span>
-                </div>
-              </div>
+                        <div class="p-6">
+                            <h3 class="font-display font-bold text-xl text-white mb-2">Portfolio Personnel V2 (Warren Labs)</h3>
+                            <p class="text-sm text-slate-300 leading-relaxed mb-4">
+                                Architecture front-end moderne pensée pour GitHub Pages : navigation fluide sans rechargement, moteur de particules 3D léger en arrière-plan, design Bento responsive et générateur de CV intégré.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="px-6 pb-6 pt-2 flex items-center justify-between border-t border-white/5">
+                        <span class="text-xs text-slate-400">Architecture & UI/UX</span>
+                        <button onclick="navigateTo('accueil')" class="text-xs font-semibold text-sky-400 hover:text-sky-300 flex items-center gap-1">
+                            <span>Explorer l'interface</span>
+                            <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                </article>
 
-              <!-- Projet 4 : Emplacement À Venir -->
-              <div class="glass-card rounded-2xl p-6 border-dashed border-white/15 flex flex-col justify-between space-y-5 bg-white/[0.01]">
-                <div class="space-y-3">
-                  <div class="flex items-center justify-between">
-                    <span class="px-2.5 py-1 rounded-md text-xs font-mono bg-white/5 text-slate-400 border border-white/10">
-                      + Prochain Projet
-                    </span>
-                    <span class="text-xs font-mono text-slate-500">Web & Marketing Digital</span>
-                  </div>
-                  <h3 class="text-xl font-bold text-slate-200">Votre Projet ou Nouvelle Solution SaaS</h3>
-                  <p class="text-sm text-slate-400 leading-relaxed">
-                    Cet espace est réservé aux prochaines créations web, tunnels de conversion automatisés et solutions sur mesure développées pour mes clients et partenaires.
-                  </p>
-                </div>
-                <div class="pt-4 border-t border-white/10 flex items-center justify-between">
-                  <span class="text-xs font-mono text-slate-500">Slot disponible</span>
-                  <button onclick="navigateTo('contact')" class="inline-flex items-center gap-1.5 text-sm font-semibold text-sky-400 hover:text-sky-300">
-                    <span>Lancer un projet</span>
-                    <i data-lucide="plus-circle" class="w-4 h-4"></i>
-                  </button>
-                </div>
-              </div>
+                <!-- Projet 2 : Tableau de Bord PWA -->
+                <article data-category="web" class="project-card glass-panel rounded-2xl overflow-hidden flex flex-col justify-between group">
+                    <div>
+                        <div class="h-44 bg-gradient-to-br from-slate-900 via-amber-950/40 to-slate-900 p-6 flex flex-col justify-between relative overflow-hidden border-b border-white/5">
+                            <div class="flex items-center justify-between relative z-10">
+                                <span class="px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 flex items-center gap-1.5">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> Live
+                                </span>
+                                <span class="text-xs font-mono text-slate-400">JavaScript • PWA • LocalStorage</span>
+                            </div>
+                            <div class="relative z-10">
+                                <div class="w-12 h-12 rounded-xl bg-amber-400/15 border border-amber-400/30 flex items-center justify-center text-amber-300 mb-2">
+                                    <i data-lucide="check-circle-2" class="w-6 h-6"></i>
+                                </div>
+                            </div>
+                            <div class="absolute -right-6 -bottom-6 w-32 h-32 rounded-full bg-amber-500/10 blur-2xl group-hover:bg-amber-400/20 transition-all"></div>
+                        </div>
+
+                        <div class="p-6">
+                            <h3 class="font-display font-bold text-xl text-white mb-2">Tableau de Bord PWA — Suivi de Formation</h3>
+                            <p class="text-sm text-slate-300 leading-relaxed mb-4">
+                                Application Web Progressive installable sur mobile et bureau, dédiée à la discipline quotidienne, au suivi d'objectifs techniques et à la mesure de progression en développement logiciel.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="px-6 pb-6 pt-2 flex items-center justify-between border-t border-white/5">
+                        <span class="text-xs text-slate-400">Productivité & Mobile-First</span>
+                        <a href="https://github.com/Warren-ops624" target="_blank" rel="noopener" class="text-xs font-semibold text-amber-400 hover:text-amber-300 flex items-center gap-1">
+                            <span>Voir sur GitHub</span>
+                            <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+                        </a>
+                    </div>
+                </article>
+
+                <!-- Projet 3 : Systèmes de Flux Automatisés -->
+                <article data-category="auto" class="project-card glass-panel rounded-2xl overflow-hidden flex flex-col justify-between group">
+                    <div>
+                        <div class="h-44 bg-gradient-to-br from-slate-900 via-indigo-950/60 to-slate-900 p-6 flex flex-col justify-between relative overflow-hidden border-b border-white/5">
+                            <div class="flex items-center justify-between relative z-10">
+                                <span class="px-3 py-1 rounded-full text-xs font-semibold bg-sky-500/20 text-sky-300 border border-sky-400/30 flex items-center gap-1.5">
+                                    <i data-lucide="git-branch" class="w-3.5 h-3.5"></i> Architecture
+                                </span>
+                                <span class="text-xs font-mono text-slate-400">Webhooks • APIs • QR & Paiement</span>
+                            </div>
+                            <div class="relative z-10">
+                                <div class="w-12 h-12 rounded-xl bg-sky-400/15 border border-sky-400/30 flex items-center justify-center text-sky-300 mb-2">
+                                    <i data-lucide="workflow" class="w-6 h-6"></i>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="p-6">
+                            <h3 class="font-display font-bold text-xl text-white mb-2">Systèmes de Flux Automatisés (Paiement → Action)</h3>
+                            <p class="text-sm text-slate-300 leading-relaxed mb-4">
+                                Conception de pipelines connectés reliant une transaction (paiement en ligne ou mobile) à la génération instantanée d'accès, de reçus PDF ou de passes QR scannables sur le terrain, sans intervention manuelle.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="px-6 pb-6 pt-2 flex items-center justify-between border-t border-white/5">
+                        <span class="text-xs text-slate-400">Automatisation Bout-en-Bout</span>
+                        <button onclick="navigateTo('contact')" class="text-xs font-semibold text-sky-400 hover:text-sky-300 flex items-center gap-1">
+                            <span>Demander une démo</span>
+                            <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                </article>
+
+                <!-- Projet 4 : Assistant Stratégique & Échecs (IA) -->
+                <article data-category="auto wip" class="project-card glass-panel rounded-2xl overflow-hidden flex flex-col justify-between group">
+                    <div>
+                        <div class="h-44 bg-gradient-to-br from-slate-900 via-purple-950/40 to-slate-900 p-6 flex flex-col justify-between relative overflow-hidden border-b border-white/5">
+                            <div class="flex items-center justify-between relative z-10">
+                                <span class="px-3 py-1 rounded-full text-xs font-semibold bg-amber-500/20 text-amber-300 border border-amber-400/30 flex items-center gap-1.5">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-ping"></span> En développement
+                                </span>
+                                <span class="text-xs font-mono text-slate-400">API Data • LLM • Analyse</span>
+                            </div>
+                            <div class="relative z-10">
+                                <div class="w-12 h-12 rounded-xl bg-amber-400/15 border border-amber-400/30 flex items-center justify-center text-amber-300 mb-2">
+                                    <i data-lucide="bot" class="w-6 h-6"></i>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="p-6">
+                            <h3 class="font-display font-bold text-xl text-white mb-2">Assistant d'Analyse Stratégique & Échecs (IA)</h3>
+                            <p class="text-sm text-slate-300 leading-relaxed mb-4">
+                                Prototype combinant l'extraction de données de parties, un moteur d'évaluation positionnelle et l'IA générative pour fournir un diagnostic clair et un plan d'entraînement personnalisé.
+                            </p>
+                            <!-- Barre de progression -->
+                            <div class="mt-2">
+                                <div class="flex justify-between text-xs mb-1.5">
+                                    <span class="text-slate-400 font-medium">Avancement du prototype</span>
+                                    <span class="text-amber-400 font-bold">70%</span>
+                                </div>
+                                <div class="w-full h-2 rounded-full bg-slate-800 overflow-hidden">
+                                    <div class="h-full rounded-full bg-gradient-to-r from-sky-400 to-amber-400" style="width: 70%;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="px-6 pb-6 pt-2 flex items-center justify-between border-t border-white/5">
+                        <span class="text-xs text-slate-400">Intelligence Artificielle</span>
+                        <span class="text-xs font-medium text-amber-300">Bientôt disponible</span>
+                    </div>
+                </article>
 
             </div>
-          </div>
         </section>
 
         <!-- ========================================== -->
-        <!-- PAGE 4 : CONTACT                           -->
+        <!-- PAGE 4 : CONTACT & RÉSEAUX                 -->
         <!-- ========================================== -->
         <section id="page-contact" class="page-section">
-          <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-            
-            <!-- Infos & Réseaux -->
-            <div class="lg:col-span-5 space-y-6">
-              <div>
-                <span class="text-xs font-mono uppercase tracking-widest text-sky-400">Travaillons ensemble</span>
-                <h2 class="text-2xl sm:text-4xl font-bold text-white mt-1">Contact</h2>
-                <p class="text-sm text-slate-300 mt-3 leading-relaxed">
-                  Un site web à concevoir, un processus métier à automatiser de A à Z, ou une stratégie digitale à propulser avec l'IA ? Écris-moi directement.
+            <div class="mb-8">
+                <span class="text-xs font-bold uppercase tracking-widest text-amber-400">Travaillons ensemble</span>
+                <h2 class="font-display font-extrabold text-3xl sm:text-4xl text-white mt-1">Contact & Réseaux</h2>
+                <p class="text-slate-400 text-sm sm:text-base mt-1 max-w-2xl">
+                    Un site web à concevoir, un processus métier à automatiser ou une stratégie digitale à propulser ? Écrivons la suite ensemble.
                 </p>
-              </div>
-
-              <div class="space-y-3">
-                <a href="https://github.com/Warren-ops624" target="_blank" rel="noopener" class="glass-card rounded-xl p-4 flex items-center justify-between group">
-                  <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-lg bg-white/5 flex items-center justify-center text-white group-hover:text-sky-400 transition-colors">
-                      <i data-lucide="github" class="w-5 h-5"></i>
-                    </div>
-                    <div>
-                      <div class="text-sm font-bold text-white">GitHub</div>
-                      <div class="text-xs font-mono text-slate-400">@Warren-ops624</div>
-                    </div>
-                  </div>
-                  <i data-lucide="arrow-up-right" class="w-4 h-4 text-slate-500 group-hover:text-sky-400"></i>
-                </a>
-
-                <div class="glass-card rounded-xl p-4 flex items-center justify-between">
-                  <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-lg bg-sky-500/10 flex items-center justify-center text-sky-400">
-                      <i data-lucide="briefcase" class="w-5 h-5"></i>
-                    </div>
-                    <div>
-                      <div class="text-sm font-bold text-white">Freelance & Missions</div>
-                      <div class="text-xs text-slate-400">Disponible sur Upwork, Fiverr & Direct</div>
-                    </div>
-                  </div>
-                  <span class="w-2.5 h-2.5 rounded-full bg-emerald-400"></span>
-                </div>
-
-                <div class="glass-card rounded-xl p-4 flex items-center justify-between">
-                  <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-lg bg-amber-500/10 flex items-center justify-center text-amber-400">
-                      <i data-lucide="map-pin" class="w-5 h-5"></i>
-                    </div>
-                    <div>
-                      <div class="text-sm font-bold text-white">Localisation</div>
-                      <div class="text-xs text-slate-400">Kinshasa, RDC • Collaboration Internationale</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
             </div>
 
-            <!-- Formulaire Interactif -->
-            <div class="lg:col-span-7 glass-card rounded-2xl p-6 sm:p-8">
-              <form id="contact-form" onsubmit="handleContactSubmit(event)" class="space-y-4">
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <label class="block text-xs font-mono uppercase tracking-wider text-slate-400 mb-1.5">Votre Nom</label>
-                    <input type="text" required placeholder="Ex: Marc Kabongo" class="w-full px-4 py-3 rounded-xl bg-white/[0.04] border border-white/10 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-sky-400 transition-colors" />
-                  </div>
-                  <div>
-                    <label class="block text-xs font-mono uppercase tracking-wider text-slate-400 mb-1.5">Email</label>
-                    <input type="email" required placeholder="vous@exemple.com" class="w-full px-4 py-3 rounded-xl bg-white/[0.04] border border-white/10 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-sky-400 transition-colors" />
-                  </div>
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                
+                <!-- Formulaire de Contact Interactif -->
+                <div class="lg:col-span-7 glass-panel rounded-2xl p-6 sm:p-8">
+                    <form id="contact-form" onsubmit="handleContactSubmit(event)" class="space-y-5">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label for="contact-name" class="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-2">Votre Nom</label>
+                                <input type="text" id="contact-name" required placeholder="Ex: Marc Kabongo"
+                                       class="w-full px-4 py-3 rounded-xl bg-slate-900/80 border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:border-sky-400 transition-colors text-sm">
+                            </div>
+                            <div>
+                                <label for="contact-email" class="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-2">Votre Email</label>
+                                <input type="email" id="contact-email" required placeholder="vous@exemple.com"
+                                       class="w-full px-4 py-3 rounded-xl bg-slate-900/80 border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:border-sky-400 transition-colors text-sm">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="contact-subject" class="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-2">Sujet du projet</label>
+                            <select id="contact-subject" class="w-full px-4 py-3 rounded-xl bg-slate-900/80 border border-white/10 text-white focus:outline-none focus:border-sky-400 transition-colors text-sm">
+                                <option value="Développement Web / Application">Développement Web / Application</option>
+                                <option value="Système d'Automatisation & API">Système d'Automatisation & API (Paiement → Action)</option>
+                                <option value="Marketing Digital & Intégration IA">Marketing Digital & Intégration IA</option>
+                                <option value="Opportunité / Collaboration">Opportunité / Collaboration</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label for="contact-message" class="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-2">Votre Message</label>
+                            <textarea id="contact-message" rows="4" required placeholder="Décrivez brièvement votre besoin ou votre idée..."
+                                      class="w-full px-4 py-3 rounded-xl bg-slate-900/80 border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:border-sky-400 transition-colors text-sm resize-none"></textarea>
+                        </div>
+
+                        <button type="submit" class="w-full py-4 rounded-xl font-semibold text-slate-950 bg-gradient-to-r from-sky-400 to-amber-300 hover:brightness-110 shadow-lg shadow-sky-500/20 transition-all flex items-center justify-center gap-2">
+                            <i data-lucide="send" class="w-4 h-4"></i>
+                            <span>Envoyer le message</span>
+                        </button>
+
+                        <!-- Notification de confirmation (sans alert()) -->
+                        <div id="contact-feedback" class="hidden p-4 rounded-xl bg-emerald-500/15 border border-emerald-400/30 text-emerald-200 text-sm flex items-start gap-3">
+                            <i data-lucide="check-circle" class="w-5 h-5 text-emerald-400 shrink-0 mt-0.5"></i>
+                            <div>
+                                <p class="font-semibold">Message préparé avec succès !</p>
+                                <p class="text-xs text-emerald-300/90 mt-0.5">Merci pour votre intérêt. Warren vous répondra dans les plus brefs délais.</p>
+                            </div>
+                        </div>
+                    </form>
                 </div>
 
-                <div>
-                  <label class="block text-xs font-mono uppercase tracking-wider text-slate-400 mb-1.5">Sujet du projet</label>
-                  <select class="w-full px-4 py-3 rounded-xl bg-[#0D1320] border border-white/10 text-white text-sm focus:outline-none focus:border-sky-400 transition-colors">
-                    <option value="web">Création de Site Web / Application</option>
-                    <option value="automation">Système d'Automatisation & Intégration</option>
-                    <option value="marketing">Marketing Digital & Solutions IA</option>
-                    <option value="other">Autre collaboration</option>
-                  </select>
+                <!-- Colonne Réseaux, vCard & CV -->
+                <div class="lg:col-span-5 flex flex-col gap-4">
+                    
+                    <!-- Liens Directs -->
+                    <div class="glass-panel rounded-2xl p-6 space-y-3">
+                        <h3 class="font-display font-bold text-white text-base mb-2">Retrouvez-moi en ligne</h3>
+                        
+                        <a href="https://github.com/Warren-ops624" target="_blank" rel="noopener" class="flex items-center justify-between p-3.5 rounded-xl bg-slate-900/70 hover:bg-slate-800/90 border border-white/5 hover:border-sky-400/30 transition-all group">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-lg bg-white/5 flex items-center justify-center text-white group-hover:text-sky-400">
+                                    <i data-lucide="github" class="w-5 h-5"></i>
+                                </div>
+                                <div>
+                                    <div class="text-sm font-semibold text-white">GitHub</div>
+                                    <div class="text-xs text-slate-400">github.com/Warren-ops624</div>
+                                </div>
+                            </div>
+                            <i data-lucide="arrow-up-right" class="w-4 h-4 text-slate-400 group-hover:text-sky-400"></i>
+                        </a>
+
+                        <a href="https://www.linkedin.com" target="_blank" rel="noopener" class="flex items-center justify-between p-3.5 rounded-xl bg-slate-900/70 hover:bg-slate-800/90 border border-white/5 hover:border-sky-400/30 transition-all group">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-lg bg-sky-500/10 flex items-center justify-center text-sky-400">
+                                    <i data-lucide="linkedin" class="w-5 h-5"></i>
+                                </div>
+                                <div>
+                                    <div class="text-sm font-semibold text-white">LinkedIn</div>
+                                    <div class="text-xs text-slate-400">Jean-Paul Ekbondu (Warren)</div>
+                                </div>
+                            </div>
+                            <i data-lucide="arrow-up-right" class="w-4 h-4 text-slate-400 group-hover:text-sky-400"></i>
+                        </a>
+
+                        <div class="grid grid-cols-2 gap-3 pt-1">
+                            <a href="https://www.fiverr.com" target="_blank" rel="noopener" class="flex items-center justify-center gap-2 p-3 rounded-xl bg-slate-900/70 hover:bg-emerald-500/10 border border-white/5 hover:border-emerald-400/30 text-sm font-semibold text-slate-200 transition-all">
+                                <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+                                <span>Fiverr</span>
+                            </a>
+                            <a href="https://www.upwork.com" target="_blank" rel="noopener" class="flex items-center justify-center gap-2 p-3 rounded-xl bg-slate-900/70 hover:bg-emerald-500/10 border border-white/5 hover:border-emerald-400/30 text-sm font-semibold text-slate-200 transition-all">
+                                <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+                                <span>Upwork</span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Carte Téléchargement vCard & CV -->
+                    <div class="glass-panel rounded-2xl p-6 space-y-3">
+                        <h3 class="font-display font-bold text-white text-base">Actions Rapides</h3>
+                        <button onclick="downloadVCard()" class="w-full p-3.5 rounded-xl bg-sky-500/15 hover:bg-sky-500/25 border border-sky-400/30 text-sky-200 font-semibold text-sm flex items-center justify-center gap-2.5 transition-all">
+                            <i data-lucide="contact" class="w-4 h-4 text-sky-400"></i>
+                            <span>Enregistrer ma Carte de Visite (.vcf)</span>
+                        </button>
+                        <button onclick="openCvModal()" class="w-full p-3.5 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 border border-amber-400/30 text-amber-200 font-semibold text-sm flex items-center justify-center gap-2.5 transition-all">
+                            <i data-lucide="printer" class="w-4 h-4 text-amber-400"></i>
+                            <span>Aperçu & Export PDF de mon CV</span>
+                        </button>
+                    </div>
+
                 </div>
-
-                <div>
-                  <label class="block text-xs font-mono uppercase tracking-wider text-slate-400 mb-1.5">Message</label>
-                  <textarea rows="4" required placeholder="Décrivez brièvement votre besoin ou votre idée..." class="w-full px-4 py-3 rounded-xl bg-white/[0.04] border border-white/10 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-sky-400 transition-colors resize-none"></textarea>
-                </div>
-
-                <button type="submit" class="btn-primary w-full py-3.5 rounded-xl font-semibold text-white text-sm flex items-center justify-center gap-2">
-                  <i data-lucide="send" class="w-4 h-4"></i>
-                  <span>Envoyer le message</span>
-                </button>
-
-                <p id="form-feedback" class="hidden text-center text-xs font-medium text-emerald-400 pt-2">
-                  ✓ Message préparé ! Merci pour votre prise de contact.
-                </p>
-              </form>
             </div>
-
-          </div>
         </section>
 
-      </div>
     </main>
 
-    <!-- Pied de page minimaliste -->
-    <footer class="border-t border-white/10 py-5 px-4 sm:px-6 text-center text-xs text-slate-500">
-      <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
-        <span>© 2026 Warren (Jean-Paul Ekbondu). Tous droits réservés.</span>
-        <span class="font-mono text-slate-400">Ingénierie Logicielle • Automatisation • IA</span>
-      </div>
+    <!-- PIED DE PAGE -->
+    <footer class="relative z-10 border-t border-white/5 py-6 px-4 text-center text-xs text-slate-500 no-print">
+        <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
+            <p>© 2026 Warren (Jean-Paul Ekbondu) — Tous droits réservés.</p>
+            <p class="text-slate-400">Kinshasa, RDC • Propulsé sur GitHub Pages</p>
+        </div>
     </footer>
 
-  </div>
-
-  <!-- ========================================================= -->
-  <!-- MODALE CV COMPLET & EXPORTABLE EN PDF EN 1 CLIC           -->
-  <!-- ========================================================= -->
-  <div id="cv-modal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-md overflow-y-auto p-4 sm:p-8">
-    <div class="max-w-4xl mx-auto space-y-4">
-      
-      <!-- Barre d'actions du CV -->
-      <div id="cv-modal-controls" class="flex flex-wrap items-center justify-between gap-3 bg-[#0E1422] border border-white/15 p-3.5 rounded-2xl">
-        <div class="flex items-center gap-2 text-sm font-semibold text-white">
-          <i data-lucide="file-check" class="w-5 h-5 text-amber-400"></i>
-          <span>Curriculum Vitae — Warren</span>
-        </div>
-        <div class="flex items-center gap-2.5">
-          <!-- Bouton pour imprimer / enregistrer en PDF -->
-          <button onclick="window.print()" class="px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-sky-500 text-slate-950 hover:bg-sky-400 transition-colors flex items-center gap-2">
-            <i data-lucide="printer" class="w-4 h-4"></i>
-            <span>Télécharger en PDF</span>
-          </button>
-          <button onclick="closeCV()" class="px-3.5 py-2 rounded-xl text-xs sm:text-sm font-medium bg-white/10 text-slate-200 hover:bg-white/20 transition-colors">
-            Fermer
-          </button>
-        </div>
-      </div>
-
-      <!-- Document CV Structuré -->
-      <div id="cv-document" class="bg-[#0B0F17] border border-white/15 rounded-2xl p-6 sm:p-10 space-y-7 text-slate-200 shadow-2xl">
-        
-        <!-- En-tête CV -->
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/15 print-border pb-6">
-          <div>
-            <h1 class="text-2xl sm:text-3xl font-extrabold text-white print-dark-text tracking-tight">
-              JEAN-PAUL EKBONDU (WARREN)
-            </h1>
-            <p class="text-sm sm:text-base font-semibold text-sky-400 mt-1">
-              Ingénieur Logiciel • Développement Web • Automatisation & IA
-            </p>
-            <p class="text-xs text-slate-400 print-muted-text mt-1">
-              Kinshasa, République Démocratique du Congo • Langues : Français, Anglais, Lingala
-            </p>
-          </div>
-          <div class="text-xs font-mono text-slate-300 print-muted-text space-y-1 sm:text-right">
-            <div>GitHub : github.com/Warren-ops624</div>
-            <div>Portfolio : warren-ops624.github.io/Warren</div>
-            <div>Statut : Disponible (Freelance & Projets)</div>
-          </div>
-        </div>
-
-        <!-- Profil -->
-        <div class="space-y-2">
-          <h2 class="text-xs font-mono uppercase tracking-widest text-amber-400 font-bold">Profil Professionnel</h2>
-          <p class="text-sm text-slate-300 print-dark-text leading-relaxed">
-            Ingénieur logiciel en formation et développeur spécialisé dans la création d'applications web modernes, la conception de systèmes d'automatisation structurés (intégration d'API, webhooks, automatisation des flux de paiement et de données) ainsi que le marketing digital augmenté par l'intelligence artificielle. Rigoureux, analytique et orienté vers l'efficacité opérationnelle.
-          </p>
-        </div>
-
-        <!-- Compétences Clés -->
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <div class="p-4 rounded-xl bg-white/[0.03] border border-white/10 print-border space-y-1.5">
-            <h3 class="text-sm font-bold text-white print-dark-text">Ingénierie Logicielle & Web</h3>
-            <p class="text-xs text-slate-400 print-muted-text leading-relaxed">
-              HTML5, CSS3, JavaScript (ES6+), Applications Web Progressives (PWA), Architecture Front-End Responsive, Git & GitHub Pages, Programmation Orientée Objet (POO).
-            </p>
-          </div>
-          <div class="p-4 rounded-xl bg-white/[0.03] border border-white/10 print-border space-y-1.5">
-            <h3 class="text-sm font-bold text-white print-dark-text">Systèmes d'Automatisation</h3>
-            <p class="text-xs text-slate-400 print-muted-text leading-relaxed">
-              Orchestration de workflows, connexion d'API REST, déclencheurs automatiques (paiement, validation, notifications), réduction des tâches manuelles répétitives.
-            </p>
-          </div>
-          <div class="p-4 rounded-xl bg-white/[0.03] border border-white/10 print-border space-y-1.5">
-            <h3 class="text-sm font-bold text-white print-dark-text">Marketing Digital & IA</h3>
-            <p class="text-xs text-slate-400 print-muted-text leading-relaxed">
-              Stratégie d'acquisition digitale, tunnels de conversion, intégration d'outils d'Intelligence Artificielle générative et analyse de performance.
-            </p>
-          </div>
-        </div>
-
-        <!-- Projets & Expériences -->
-        <div class="space-y-4">
-          <h2 class="text-xs font-mono uppercase tracking-widest text-amber-400 font-bold">Réalisations & Expériences</h2>
-          
-          <div class="space-y-3">
-            <div>
-              <div class="flex justify-between text-sm font-bold text-white print-dark-text">
-                <span>Développeur Web & Architecte d'Automatisation (Indépendant)</span>
-                <span class="font-mono text-xs text-sky-400">2025 — Présent</span>
-              </div>
-              <ul class="list-disc list-inside text-xs sm:text-sm text-slate-300 print-dark-text mt-1 space-y-1">
-                <li>Conception et déploiement d'une Progressive Web App (PWA) interactive de suivi de formation et d'objectifs.</li>
-                <li>Architecture de flux automatisés reliant les transactions clients aux systèmes de validation et de suivi sans intervention manuelle.</li>
-                <li>Développement d'un prototype d'analyse automatisée exploitant des API externes et des modèles d'IA.</li>
-              </ul>
+    <!-- ========================================================== -->
+    <!-- MODALE CV COMPLET & IMPRIMABLE EN PDF                      -->
+    <!-- ========================================================== -->
+    <div id="cv-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/80 backdrop-blur-md overflow-y-auto">
+        <div class="bg-slate-900 border border-white/15 rounded-2xl max-w-3xl w-full my-8 overflow-hidden shadow-2xl">
+            
+            <!-- Barre d'outils de la modale (masquée à l'impression) -->
+            <div class="px-6 py-4 bg-slate-950 border-b border-white/10 flex flex-wrap items-center justify-between gap-3 no-print">
+                <div class="flex items-center gap-2">
+                    <i data-lucide="file-check" class="w-5 h-5 text-amber-400"></i>
+                    <span class="font-display font-bold text-white text-sm sm:text-base">Curriculum Vitae — Warren</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <!-- Lien direct si CV_Warren.pdf est présent sur GitHub -->
+                    <a href="CV_Warren.pdf" download="CV_Warren_Ingenieur_Logiciel.pdf" onclick="handlePdfFallback(event)" class="px-3.5 py-2 rounded-xl text-xs font-semibold bg-sky-500/20 text-sky-300 border border-sky-400/30 hover:bg-sky-500/30 transition-all flex items-center gap-1.5">
+                        <i data-lucide="download" class="w-3.5 h-3.5"></i>
+                        <span>Fichier PDF</span>
+                    </a>
+                    <!-- Bouton d'impression directe en PDF -->
+                    <button onclick="window.print()" class="px-4 py-2 rounded-xl text-xs font-semibold bg-amber-400 text-slate-950 hover:brightness-110 transition-all flex items-center gap-1.5">
+                        <i data-lucide="printer" class="w-3.5 h-3.5"></i>
+                        <span>Exporter / Imprimer en PDF</span>
+                    </button>
+                    <button onclick="closeCvModal()" class="p-2 rounded-xl bg-white/5 text-slate-400 hover:text-white">
+                        <i data-lucide="x" class="w-5 h-5"></i>
+                    </button>
+                </div>
             </div>
 
-            <div>
-              <div class="flex justify-between text-sm font-bold text-white print-dark-text">
-                <span>Opérateur / Agent Technique (CLCR) — CENI</span>
-                <span class="font-mono text-xs text-slate-400">Expérience antérieure</span>
-              </div>
-              <p class="text-xs sm:text-sm text-slate-300 print-dark-text mt-1">
-                Traitement rigoureux des données, gestion opérationnelle et respect strict des protocoles de fiabilité et de sécurité.
-              </p>
+            <!-- Message d'information discret si CV_Warren.pdf n'est pas encore déposé -->
+            <div id="pdf-notice" class="hidden px-6 py-3 bg-amber-500/15 border-b border-amber-400/20 text-amber-200 text-xs no-print">
+                Astuce : Déposez votre fichier <code class="font-bold">CV_Warren.pdf</code> à la racine de votre dépôt GitHub pour activer le téléchargement direct, ou cliquez sur <strong>« Exporter / Imprimer en PDF »</strong> juste à droite pour sauvegarder immédiatement ce CV !
             </div>
-          </div>
-        </div>
 
-        <!-- Formation -->
-        <div class="space-y-3">
-          <h2 class="text-xs font-mono uppercase tracking-widest text-amber-400 font-bold">Formation & Certifications</h2>
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs sm:text-sm">
-            <div class="p-3.5 rounded-xl bg-white/[0.02] border border-white/10 print-border">
-              <div class="font-bold text-white print-dark-text">Licence en Sciences Informatiques (Génie Logiciel)</div>
-              <div class="text-slate-400 print-muted-text">Institut Supérieur d'Informatique, Programmation et Analyse (ISIPA) — Kinshasa</div>
-            </div>
-            <div class="p-3.5 rounded-xl bg-white/[0.02] border border-white/10 print-border">
-              <div class="font-bold text-white print-dark-text">Formation en Marketing Digital</div>
-              <div class="text-slate-400 print-muted-text">UniAthena (Athena Global Education) • Spécialisation croissance & outils numériques</div>
-            </div>
-          </div>
-        </div>
+            <!-- CONTENU DU CV FORMATÉ (IMPRIMABLE) -->
+            <div id="cv-printable-area" class="p-6 sm:p-10 bg-white text-slate-900 space-y-6">
+                <!-- En-tête CV -->
+                <div class="border-b-2 border-slate-900 pb-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div>
+                        <h1 class="font-display font-extrabold text-2xl sm:text-3xl text-slate-950 uppercase tracking-tight">Jean-Paul Ekbondu (Warren)</h1>
+                        <p class="text-sky-700 font-bold text-sm sm:text-base mt-1">Ingénieur Logiciel • Développement Web • Systèmes d'Automatisation & IA</p>
+                    </div>
+                    <div class="text-xs text-slate-600 space-y-1 sm:text-right">
+                        <p><strong>Localisation :</strong> Kinshasa, RD Congo</p>
+                        <p><strong>GitHub :</strong> github.com/Warren-ops624</p>
+                        <p><strong>Disponibilité :</strong> Freelance & Projets Tech</p>
+                    </div>
+                </div>
 
-      </div>
+                <!-- Profil -->
+                <div>
+                    <h2 class="text-xs font-extrabold uppercase tracking-widest text-slate-500 mb-2">Profil Professionnel</h2>
+                    <p class="text-sm text-slate-700 leading-relaxed">
+                        Ingénieur logiciel orienté résultats, spécialisé dans la conception d'applications web modernes, l'architecture de systèmes d'automatisation structurés (interconnexion de paiements, APIs, génération automatique d'accès et QR codes) ainsi que le marketing digital propulsé par l'Intelligence Artificielle. Animé par la rigueur technique, la discipline continue et l'impact concret.
+                    </p>
+                </div>
+
+                <!-- Compétences Techniques -->
+                <div>
+                    <h2 class="text-xs font-extrabold uppercase tracking-widest text-slate-500 mb-2">Domaines d'Expertise</h2>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+                        <div class="p-3 rounded-lg bg-slate-100">
+                            <strong class="text-slate-900 block">Développement Web & Front-End</strong>
+                            <span class="text-slate-600 text-xs">HTML5, CSS3, Tailwind CSS, JavaScript ES6+, Progressive Web Apps (PWA), UI/UX Responsive.</span>
+                        </div>
+                        <div class="p-3 rounded-lg bg-slate-100">
+                            <strong class="text-slate-900 block">Automatisation & Intégration Système</strong>
+                            <span class="text-slate-600 text-xs">Pipelines automatisés (Paiement → Validation → Scan), Webhooks, APIs REST, Make / n8n.</span>
+                        </div>
+                        <div class="p-3 rounded-lg bg-slate-100">
+                            <strong class="text-slate-900 block">Marketing Digital & IA</strong>
+                            <span class="text-slate-600 text-xs">Tunnels d'acquisition, stratégie digitale, intégration d'outils d'IA générative et assistants métier.</span>
+                        </div>
+                        <div class="p-3 rounded-lg bg-slate-100">
+                            <strong class="text-slate-900 block">Sécurité & Méthodologie</strong>
+                            <span class="text-slate-600 text-xs">Bonnes pratiques de sécurité web, contrôle de version Git/GitHub, déploiement continu.</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Projets & Réalisations -->
+                <div>
+                    <h2 class="text-xs font-extrabold uppercase tracking-widest text-slate-500 mb-2">Projets & Réalisations Clés</h2>
+                    <ul class="space-y-2.5 text-sm text-slate-700">
+                        <li>
+                            <strong class="text-slate-950">Architecture de Flux Automatisés (Paiement → Action) :</strong> Conception de workflows reliant les notifications de paiement à la génération automatique de justificatifs et codes scannables.
+                        </li>
+                        <li>
+                            <strong class="text-slate-950">Tableau de Bord PWA de Suivi de Formation :</strong> Développement d'une application web installable pour le suivi d'objectifs et la montée en compétence technique.
+                        </li>
+                        <li>
+                            <strong class="text-slate-950">Assistant d'Analyse Stratégique (IA) :</strong> Intégration d'APIs de données et de modèles d'analyse pour le diagnostic et le coaching stratégique.
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Formation -->
+                <div>
+                    <h2 class="text-xs font-extrabold uppercase tracking-widest text-slate-500 mb-2">Formation Académique</h2>
+                    <div class="flex flex-col sm:flex-row sm:justify-between text-sm">
+                        <div>
+                            <strong class="text-slate-950">Licence en Sciences Informatiques (L2 en cours)</strong>
+                            <span class="text-slate-600 block text-xs">Institut Supérieur d'Informatique, Programmation et Analyse (ISIPA) — Kinshasa</span>
+                        </div>
+                        <span class="text-xs font-semibold text-slate-500 mt-1 sm:mt-0">En cours</span>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
 
-  <!-- ========================================================= -->
-  <!-- SCRIPTS : NAVIGATION FLUIDE + ANIMATION 3D POUSSIÈRE      -->
-  <!-- ========================================================= -->
-  <script>
-    // 1. Initialisation des icônes Lucide
-    lucide.createIcons();
+    <!-- ========================================================== -->
+    <!-- SCRIPTS : NAVIGATION, CANVAS 3D POUSSIÈRE, VCARD & CV      -->
+    <!-- ========================================================== -->
+    <script>
+        // Initialisation des icônes Lucide
+        lucide.createIcons();
 
-    // 2. Navigation fluide entre les 4 pages (Accueil, Présentation, Créations, Contact)
-    function navigateTo(pageId) {
-      const sections = document.querySelectorAll('.page-section');
-      const target = document.getElementById('page-' + pageId);
-      if (!target) return;
+        // 1. NAVIGATION FLUIDE ENTRE LES 4 PAGES
+        let currentPage = 'accueil';
 
-      // Mise à jour des boutons de navigation Desktop
-      document.querySelectorAll('.nav-btn').forEach(btn => {
-        if (btn.dataset.nav === pageId) {
-          btn.classList.add('active');
-        } else {
-          btn.classList.remove('active');
-        }
-      });
+        function navigateTo(pageId) {
+            if (pageId === currentPage) return;
 
-      // Mise à jour des boutons Mobile
-      document.querySelectorAll('[data-nav-mobile]').forEach(btn => {
-        if (btn.dataset.navMobile === pageId) {
-          btn.className = 'w-full text-left px-4 py-2.5 rounded-lg text-sm font-medium text-sky-400 bg-sky-500/10';
-        } else {
-          btn.className = 'w-full text-left px-4 py-2.5 rounded-lg text-sm font-medium text-slate-300 hover:bg-white/5';
-        }
-      });
+            const oldSection = document.getElementById(`page-${currentPage}`);
+            const newSection = document.getElementById(`page-${pageId}`);
+            if (!newSection) return;
 
-      // Transition de sortie puis d'entrée
-      sections.forEach(sec => {
-        sec.classList.remove('visible');
-        setTimeout(() => {
-          if (!sec.classList.contains('visible')) {
-            sec.classList.remove('active');
-          }
-        }, 250);
-      });
+            // Masquer l'ancienne page avec transition
+            oldSection.classList.remove('visible');
+            setTimeout(() => {
+                oldSection.classList.remove('active');
+                
+                // Afficher la nouvelle page
+                newSection.classList.add('active');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                
+                // Déclencher l'animation d'entrée
+                requestAnimationFrame(() => {
+                    newSection.classList.add('visible');
+                });
+            }, 220);
 
-      setTimeout(() => {
-        target.classList.add('active');
-        // Force le reflow pour déclencher la transition CSS
-        void target.offsetWidth;
-        target.classList.add('visible');
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      }, 220);
-    }
+            // Mise à jour des boutons actifs (Desktop)
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                if (btn.dataset.nav === pageId) {
+                    btn.className = 'nav-btn px-4 py-2 rounded-lg text-sm font-medium transition-all text-white bg-sky-500/20 border border-sky-400/30';
+                } else {
+                    btn.className = 'nav-btn px-4 py-2 rounded-lg text-sm font-medium text-slate-300 hover:text-white transition-all';
+                }
+            });
 
-    function toggleMobileMenu() {
-      const menu = document.getElementById('mobile-menu');
-      menu.classList.toggle('hidden');
-    }
+            // Mise à jour des boutons actifs (Mobile)
+            document.querySelectorAll('.nav-btn-mobile').forEach(btn => {
+                if (btn.dataset.nav === pageId) {
+                    btn.className = 'nav-btn-mobile w-full text-left px-4 py-3 rounded-xl text-sm font-medium text-white bg-sky-500/20';
+                } else {
+                    btn.className = 'nav-btn-mobile w-full text-left px-4 py-3 rounded-xl text-sm font-medium text-slate-300 hover:bg-white/5';
+                }
+            });
 
-    // 3. Modale CV
-    function openCV() {
-      document.getElementById('cv-modal').classList.remove('hidden');
-      document.body.style.overflow = 'hidden';
-    }
-
-    function closeCV() {
-      document.getElementById('cv-modal').classList.add('hidden');
-      document.body.style.overflow = '';
-    }
-
-    // 4. Simulation d'envoi du formulaire de contact
-    function handleContactSubmit(e) {
-      e.preventDefault();
-      const feedback = document.getElementById('form-feedback');
-      feedback.classList.remove('hidden');
-      e.target.reset();
-      setTimeout(() => feedback.classList.add('hidden'), 5000);
-    }
-
-    // 5. Animation 3D Continue : Poussière Bleutée & Dorée glissant en profondeur (Style Mercedes)
-    (function initCosmicDust() {
-      const canvas = document.getElementById('space-canvas');
-      const ctx = canvas.getContext('2d');
-
-      let width, height, centerX, centerY;
-      const particles = [];
-      // Nombre de particules adapté pour être fluide même sur smartphone
-      const particleCount = window.innerWidth < 768 ? 140 : 260;
-      const maxDepth = 1000;
-      const speed = 2.4; // Vitesse de glissement continu vers l'arrière/profondeur
-
-      function resize() {
-        width = canvas.width = window.innerWidth;
-        height = canvas.height = window.innerHeight;
-        centerX = width / 2;
-        centerY = height / 2;
-      }
-
-      window.addEventListener('resize', resize);
-      resize();
-
-      class DustParticle {
-        constructor() {
-          this.reset(true);
+            currentPage = pageId;
         }
 
-        reset(initial = false) {
-          this.x = (Math.random() - 0.5) * width * 1.8;
-          this.y = (Math.random() - 0.5) * height * 1.8;
-          this.z = initial ? Math.random() * maxDepth : maxDepth;
-          // 70% poussière bleutée lumineuse, 30% poussière dorée chaleureuse
-          this.isGold = Math.random() < 0.30;
-          this.baseSize = Math.random() * 1.8 + 0.6;
+        // Menu mobile
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
         }
 
-        update() {
-          // Mouvement continu en profondeur
-          this.z -= speed;
-          if (this.z <= 1) {
-            this.reset(false);
-          }
+        // 2. FILTRAGE DES CRÉATIONS
+        function filterProjects(category) {
+            // Mise à jour visuelle des boutons de filtre
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                if (btn.dataset.filter === category) {
+                    btn.className = 'filter-btn px-4 py-2 rounded-xl text-xs font-semibold bg-sky-500 text-slate-950 transition-all';
+                } else {
+                    btn.className = 'filter-btn px-4 py-2 rounded-xl text-xs font-semibold glass-panel text-slate-300 hover:text-white transition-all';
+                }
+            });
+
+            // Affichage/Masquage des cartes
+            document.querySelectorAll('.project-card').forEach(card => {
+                const cats = card.dataset.category.split(' ');
+                if (category === 'all' || cats.includes(category)) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
         }
 
-        draw() {
-          const perspective = 380 / this.z;
-          const sx = centerX + this.x * perspective;
-          const sy = centerY + this.y * perspective;
-
-          // Position précédente pour créer une fine traînée de vitesse
-          const prevPerspective = 380 / (this.z + speed * 3.5);
-          const px = centerX + this.x * prevPerspective;
-          const py = centerY + this.y * prevPerspective;
-
-          if (sx < -50 || sx > width + 50 || sy < -50 || sy > height + 50) {
-            return;
-          }
-
-          const depthRatio = 1 - this.z / maxDepth;
-          const alpha = Math.min(0.85, depthRatio * 1.1);
-          const radius = Math.max(0.4, this.baseSize * perspective * 0.75);
-
-          // Couleur bleutée ou dorée
-          const color = this.isGold
-            ? `rgba(245, 185, 66, ${alpha})`
-            : `rgba(56, 189, 248, ${alpha})`;
-
-          // Traînée subtile de mouvement
-          ctx.beginPath();
-          ctx.moveTo(px, py);
-          ctx.lineTo(sx, sy);
-          ctx.strokeStyle = color;
-          ctx.lineWidth = radius * 0.85;
-          ctx.stroke();
-
-          // Point lumineux de la poussière
-          ctx.beginPath();
-          ctx.arc(sx, sy, radius, 0, Math.PI * 2);
-          ctx.fillStyle = color;
-          ctx.fill();
-        }
-      }
-
-      for (let i = 0; i < particleCount; i++) {
-        particles.push(new DustParticle());
-      }
-
-      function animate() {
-        // Effacement léger pour un rendu soyeux
-        ctx.fillStyle = 'rgba(5, 7, 11, 0.35)';
-        ctx.fillRect(0, 0, width, height);
-
-        for (let i = 0; i < particles.length; i++) {
-          particles[i].update();
-          particles[i].draw();
+        // 3. FORMULAIRE DE CONTACT
+        function handleContactSubmit(e) {
+            e.preventDefault();
+            const feedback = document.getElementById('contact-feedback');
+            feedback.classList.remove('hidden');
+            e.target.reset();
+            setTimeout(() => {
+                feedback.classList.add('hidden');
+            }, 6000);
         }
 
-        requestAnimationFrame(animate);
-      }
+        // 4. GÉNÉRATION DYNAMIQUE DE LA CARTE DE VISITE (.VCF)
+        function downloadVCard() {
+            const vcard = [
+                'BEGIN:VCARD',
+                'VERSION:3.0',
+                'N:Ekbondu;Jean-Paul (Warren);;;',
+                'FN:Warren (Jean-Paul Ekbondu)',
+                'TITLE:Ingénieur Logiciel — Web, Automatisation & IA',
+                'ADR;TYPE=WORK:;;Kinshasa;;;RD Congo',
+                'URL:https://github.com/Warren-ops624',
+                'NOTE:Développement Web, Architecture de Systèmes d\'Automatisation, Marketing Digital & IA.',
+                'END:VCARD'
+            ].join('\n');
 
-      // Fond initial net
-      ctx.fillStyle = '#05070B';
-      ctx.fillRect(0, 0, width, height);
-      animate();
-    })();
-  </script>
+            const blob = new Blob([vcard], { type: 'text/vcard;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'Warren_Ingenieur_Logiciel.vcf';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+        }
+
+        // 5. GESTION DE LA MODALE CV & IMPRESSION PDF
+        function openCvModal() {
+            const modal = document.getElementById('cv-modal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeCvModal() {
+            const modal = document.getElementById('cv-modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        function handlePdfFallback(event) {
+            // Vérifie si le fichier local existe via fetch; sinon affiche l'astuce d'impression PDF
+            fetch('CV_Warren.pdf', { method: 'HEAD' })
+                .then(res => {
+                    if (!res.ok) {
+                        event.preventDefault();
+                        document.getElementById('pdf-notice').classList.remove('hidden');
+                    }
+                })
+                .catch(() => {
+                    event.preventDefault();
+                    document.getElementById('pdf-notice').classList.remove('hidden');
+                });
+        }
+
+        // 6. ANIMATION 3D CONTINU : POUSSIÈRE LUMINEUSE BLEUTÉE & DORÉE EN PROFONDEUR
+        // Inspirée des sites vitrines automobiles (effet de déplacement fluide vers l'avant/arrière)
+        (function initDustTunnel() {
+            const canvas = document.getElementById('dust-canvas');
+            const ctx = canvas.getContext('2d');
+
+            let width, height, centerX, centerY;
+            const particles = [];
+            const PARTICLE_COUNT = window.innerWidth < 768 ? 110 : 210; // Optimisé mobile & desktop
+            const SPEED = 1.6; // Vitesse fluide et élégante
+
+            function resize() {
+                width = canvas.width = window.innerWidth;
+                height = canvas.height = window.innerHeight;
+                centerX = width / 2;
+                centerY = height / 2;
+            }
+
+            class DustParticle {
+                constructor(initial) {
+                    this.reset(initial);
+                }
+
+                reset(initial = false) {
+                    // Position aléatoire autour du centre de fuite
+                    this.x = (Math.random() - 0.5) * width * 1.6;
+                    this.y = (Math.random() - 0.5) * height * 1.6;
+                    // Profondeur z : plus z est grand, plus la particule est loin
+                    this.z = initial ? Math.random() * width : width;
+                    // Alternance élégante entre poussière bleu cyan (70%) et poussière dorée (30%)
+                    this.isGold = Math.random() > 0.7;
+                    this.baseSize = Math.random() * 1.8 + 0.6;
+                }
+
+                update() {
+                    this.z -= SPEED;
+                    if (this.z <= 1) {
+                        this.reset(false);
+                    }
+                }
+
+                draw() {
+                    // Projection 3D vers 2D
+                    const fov = width * 0.65;
+                    const scale = fov / this.z;
+                    const screenX = centerX + this.x * scale;
+                    const screenY = centerY + this.y * scale;
+
+                    // Si hors écran, on réinitialise
+                    if (screenX < -20 || screenX > width + 20 || screenY < -20 || screenY > height + 20) {
+                        this.reset(false);
+                        return;
+                    }
+
+                    // Opacité progressive selon la proximité
+                    const alpha = Math.min(1, (1 - this.z / width) * 1.15);
+                    const radius = Math.max(0.4, this.baseSize * scale * 0.7);
+
+                    ctx.beginPath();
+                    ctx.arc(screenX, screenY, radius, 0, Math.PI * 2);
+
+                    if (this.isGold) {
+                        ctx.fillStyle = `rgba(251, 191, 36, ${alpha * 0.85})`; // Or lumineux
+                    } else {
+                        ctx.fillStyle = `rgba(56, 189, 248, ${alpha * 0.85})`; // Bleu cyan lumineux
+                    }
+
+                    ctx.fill();
+                }
+            }
+
+            function init() {
+                resize();
+                particles.length = 0;
+                for (let i = 0; i < PARTICLE_COUNT; i++) {
+                    particles.push(new DustParticle(true));
+                }
+            }
+
+            function animate() {
+                // Léger voile sombre pour un rendu net et soyeux
+                ctx.fillStyle = 'rgba(6, 9, 17, 0.35)';
+                ctx.fillRect(0, 0, width, height);
+
+                for (let i = 0; i < particles.length; i++) {
+                    particles[i].update();
+                    particles[i].draw();
+                }
+
+                requestAnimationFrame(animate);
+            }
+
+            window.addEventListener('resize', resize);
+            window.addEventListener('load', () => {
+                init();
+                animate();
+            });
+        })();
+    </script>
 </body>
 </html>
